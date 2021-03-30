@@ -3,15 +3,23 @@ import React, { useState } from 'react'
 
 
 const Statistics = (props) => {
+  if ((props.good + props.neutral + props.bad) > 0) {
+    return (
+      <>
+      <h1>statistics</h1>
+      good {props.good}<br/>
+      neutral {props.neutral}<br/>
+      bad {props.bad} <br/>
+      average {props.average} <br/>
+      positive {props.positive} % 
+      </>
+    )
+  }
   return (
-    <>
-    <h1>statistics</h1>
-    good {props.good}<br/>
-    neutral {props.neutral}<br/>
-    bad {props.bad} <br/>
-    average {props.average} <br/>
-    positive {props.positive} % 
-    </>
+    <div>
+      <h1>statistics</h1>
+      No feedback given
+    </div>
   )
 }
 
