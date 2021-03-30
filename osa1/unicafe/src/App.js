@@ -11,11 +11,30 @@ const Statistics = (props) => {
     return (
       <>
       <h1>statistics</h1>
-      <StatisticsLine text={"good"} value={props.good} /><br/>
-      <StatisticsLine text={"neutral"} value={props.neutral} /><br/>
-      <StatisticsLine text={"bad"} value={props.bad} /><br />
-      <StatisticsLine text={"average"} value={props.average} /><br/>
-      <StatisticsLine text={"positive"} value={props.positive} /> % 
+      <table>
+        <tbody>
+          <tr>
+            <td>good</td>
+            <td>{props.good}</td>
+          </tr>
+          <tr>
+            <td>neutral</td>
+            <td>{props.neutral}</td>
+          </tr>
+          <tr>
+            <td>bad</td>
+            <td>{props.bad}</td>
+          </tr>
+          <tr>
+            <td>average</td>
+            <td>{props.average}</td>
+          </tr>
+          <tr>
+            <td>positive</td>
+            <td>{props.positive} %</td>
+          </tr>
+        </tbody>
+      </table>
       </>
     )
   }
