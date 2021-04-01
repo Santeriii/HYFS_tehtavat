@@ -5,20 +5,33 @@ const RandomAnecdote = ({ anecdotes, selected, setSelected, votes, setVotes }) =
     setSelected(Math.floor(Math.random() * 6))
   }
 
-  const vote = (event) => {
-    event.preventDefault()
+  const vote = () => {
     const copy = {...votes}
     copy[selected] += 1
 
     setVotes(copy)
   }
 
+  const mostVotedAnecdote = () => {
+    let highestValue = Math.max(...Object.values(votes))
+    let index = Object.values(votes).indexOf(highestValue)
+    return (
+      <>
+        {anecdotes[index]}<br />
+        has {votes[index]} votes
+      </>
+    )
+  }
+
   return (
     <div>
+      <h1>Anecdote of the day</h1>
       {anecdotes[selected]}<br />
       has {votes[selected]} votes.<br/>
       <button onClick={vote}>vote</button>
       <button onClick={changeAnecdote}>next anecdote</button>
+      <h1>Anecdote with the most votes</h1>
+      {mostVotedAnecdote()}
     </div>
   )
 }
