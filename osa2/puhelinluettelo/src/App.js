@@ -31,7 +31,12 @@ const App = () => {
     })
 
     if (!names.includes(newName)) {
-      setPersons(persons.concat(personObject))
+      axios
+        .post('http://localhost:3001/persons', personObject)
+        .then(response => {
+          console.log(response.data)
+          setPersons(persons.concat(personObject))
+        })
     }
     
     if (names.includes(newName)) {
