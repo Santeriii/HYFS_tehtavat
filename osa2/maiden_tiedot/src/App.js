@@ -19,6 +19,10 @@ function App() {
     setSearchTerm(event.target.value)
   }
 
+  const showFullCountryData = (event) => {
+    setSearchTerm(event.target.value)
+  }
+
   return (
     <div>
       find countries <input
@@ -31,7 +35,10 @@ function App() {
       {(foundCountries.length < 10 && foundCountries.length > 1) &&
         foundCountries.map(country => {
           return (
-            <li key={country.name}>{country.name}</li>
+            <>
+              <li key={country.name}>{country.name}</li>
+              <button onClick={showFullCountryData} value={country.name}>show</button>
+            </>
           )
       })}
       {foundCountries.length == 1 &&
