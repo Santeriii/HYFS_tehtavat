@@ -8,8 +8,8 @@ const App = () => {
   const [ persons, setPersons] = useState([]) 
   const [ newName, setNewName ] = useState('')
   const [ newNumber, setNewNumber ] = useState('')
-  const [ names, setNames ] = useState([])
   const [ searchTerm, setSearchTerm ] = useState('')
+  const [ isOnList, setIsOnList ] = useState(false)
 
   useEffect(() => {
     personService
@@ -21,16 +21,19 @@ const App = () => {
 
   const addPerson = (event) => {
     event.preventDefault()
+
     const personObject = {
       name: newName,
       number: newNumber
     }
 
     persons.map(person => {
-      setNames(names.concat(person.name))
+      if (person.name === newName) {
+        setIsOnList(true)
+      }
     })
 
-    if (!names.includes(newName)) {
+    if (!isOnList) {
       personService
         .create(personObject)
         .then(returnedPerson => {
@@ -38,11 +41,24 @@ const App = () => {
         })
     }
     
-    if (names.includes(newName)) {
-      alert(`${newName} is already added to phonebook`)
+    if (isOnList) {
+      console.log("includes")
+      if (window.confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)) {
+        const toBeUpdated = persons.find(person => person.name === personObject.name)
+        const id = toBeUpdated.id
+
+        personService
+          .update(id, personObject)
+          .then(returnedPerson => {
+            setPersons(persons.map(person => person.id !== id ? person : returnedPerson))
+          })
+      }
+
+      
     }
 
     setNewName('')
+    setNewNumber('')
   }
 
   const deletePerson = (id) => {
