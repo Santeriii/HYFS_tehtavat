@@ -3,6 +3,7 @@ import Numbers from './components/Numbers'
 import Filter from './components/Filter'
 import AddPersonForm from './components/AddPersonForm'
 import personService from './services/persons'
+import Notification from './components/Notification'
 
 const App = () => {
   const [ persons, setPersons] = useState([]) 
@@ -10,6 +11,7 @@ const App = () => {
   const [ newNumber, setNewNumber ] = useState('')
   const [ searchTerm, setSearchTerm ] = useState('')
   const [ isOnList, setIsOnList ] = useState(false)
+  const [ notificationMessage, setNotificationMessage ] = useState(null)
 
   useEffect(() => {
     personService
@@ -39,6 +41,12 @@ const App = () => {
         .then(returnedPerson => {
           setPersons(persons.concat(returnedPerson))
         })
+        
+        setNotificationMessage(`Added ${personObject.name}`)
+
+        setTimeout(() => {
+          setNotificationMessage(null)
+        }, 5000)
     }
     
     if (isOnList) {
@@ -52,6 +60,12 @@ const App = () => {
           .then(returnedPerson => {
             setPersons(persons.map(person => person.id !== id ? person : returnedPerson))
           })
+
+          setNotificationMessage(`Updated ${toBeUpdated.name}`)
+
+          setTimeout(() => {
+            setNotificationMessage(null)
+          }, 5000)
       }
 
       
@@ -62,6 +76,14 @@ const App = () => {
   }
 
   const deletePerson = (id) => {
+    const name = persons.find(person => person.id === id)
+
+    setNotificationMessage(`Deleted ${name.name}`)
+
+    setTimeout(() => {
+      setNotificationMessage(null)
+    }, 5000)
+
     personService
       .remove(id)
       .then(
@@ -84,6 +106,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={notificationMessage} classname={"notification"} />
       <Filter searchTerm={searchTerm} handleSearchTermChange={handleSearchTermChange} />
       <AddPersonForm addPerson={addPerson} newName={newName} handleNameChange={handleNameChange} newNumber={newNumber} handleNumberChange={handleNumberChange} />
       <Numbers persons={persons} searchTerm={searchTerm} deletePerson={deletePerson} />
