@@ -12,6 +12,7 @@ const App = () => {
   const [ searchTerm, setSearchTerm ] = useState('')
   const [ isOnList, setIsOnList ] = useState(false)
   const [ notificationMessage, setNotificationMessage ] = useState(null)
+  const [ errorMessage, setErrorMessage ] = useState(null)
 
   useEffect(() => {
     personService
@@ -59,13 +60,23 @@ const App = () => {
           .update(id, personObject)
           .then(returnedPerson => {
             setPersons(persons.map(person => person.id !== id ? person : returnedPerson))
+
+            setNotificationMessage(`Updated ${toBeUpdated.name}`)
+
+            setTimeout(() => {
+              setNotificationMessage(null)
+            }, 5000)
+          })
+          .catch(error => {
+            setErrorMessage(`Information of ${toBeUpdated.name} has already been removed from server`)
+
+            setTimeout(() => {
+              setErrorMessage(null)
+            }, 5000)
+            console.log(error)
           })
 
-          setNotificationMessage(`Updated ${toBeUpdated.name}`)
-
-          setTimeout(() => {
-            setNotificationMessage(null)
-          }, 5000)
+          
       }
 
       
@@ -107,6 +118,7 @@ const App = () => {
     <div>
       <h2>Phonebook</h2>
       <Notification message={notificationMessage} classname={"notification"} />
+      <Notification message={errorMessage} classname={"error"} />
       <Filter searchTerm={searchTerm} handleSearchTermChange={handleSearchTermChange} />
       <AddPersonForm addPerson={addPerson} newName={newName} handleNameChange={handleNameChange} newNumber={newNumber} handleNumberChange={handleNumberChange} />
       <Numbers persons={persons} searchTerm={searchTerm} deletePerson={deletePerson} />
