@@ -41,13 +41,20 @@ const App = () => {
         .create(personObject)
         .then(returnedPerson => {
           setPersons(persons.concat(returnedPerson))
-        })
-        
-        setNotificationMessage(`Added ${personObject.name}`)
 
-        setTimeout(() => {
-          setNotificationMessage(null)
-        }, 5000)
+          setNotificationMessage(`Added ${personObject.name}`)
+
+          setTimeout(() => {
+            setNotificationMessage(null)
+          }, 5000)
+        })
+        .catch(error => {
+          setErrorMessage(error.response.data)
+
+          setTimeout(() => {
+            setErrorMessage(null)
+          }, 5000)
+        })
     }
     
     if (isOnList) {
