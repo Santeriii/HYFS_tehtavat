@@ -5,6 +5,7 @@ function App() {
   const [ countries, setCountries ] = useState([])
   const [ searchTerm, setSearchTerm ] = useState('')
   const foundCountries = countries.filter(country => country.name.toLowerCase().includes(searchTerm.toLowerCase()))
+  const [ weatherData, setWeatherData ] = useState([])
 
   useEffect(() => {
     axios
@@ -12,8 +13,17 @@ function App() {
       .then(response => {
         setCountries(response.data)
       })
-      
   }, [])
+
+  useEffect(() => {
+    if (foundCountries.length === 1) {
+      axios
+        .get(`http://api.weatherstack.com/current?access_key=${process.env.REACT_APP_API_KEY}&query=${foundCountries[0].capital}`)
+        .then(response => {
+          setWeatherData(response.data)
+        })
+    }
+  }, [searchTerm])
 
   const handleSeacrhTermChange = (event) => {
     setSearchTerm(event.target.value)
@@ -37,7 +47,7 @@ function App() {
           return (
             <>
               <li key={country.name}>{country.name}</li>
-              <button onClick={showFullCountryData} value={country.name}>show</button>
+              <button key={country.capital} onClick={showFullCountryData} value={country.name}>show</button>
             </>
           )
       })}
@@ -46,7 +56,7 @@ function App() {
           <h1>{foundCountries[0].name}</h1>
           <p>capital {foundCountries[0].capital}<br/>
           population {foundCountries[0].population}</p>
-          <h2>languages</h2>
+          <h2>Spoken languages</h2>
           <ul>
           {foundCountries[0].languages.map(language => {
             return (
@@ -55,6 +65,14 @@ function App() {
           })}
           </ul>
           <img src={foundCountries[0].flag} alt={'flag'} />
+          <h2>Weather in {foundCountries[0].capital}</h2>
+          {weatherData.current &&
+            <>
+              <p>temperature: {weatherData.current.temperature} Celsius</p>
+              <img src={weatherData.current.weather_icons[0]} alt={'current weather icon'} />
+              <p>wind: {weatherData.current.wind_speed} mph direction {weatherData.current.wind_dir}</p>
+            </>
+          }
         </>
       }
       </ul>
